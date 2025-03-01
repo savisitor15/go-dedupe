@@ -19,25 +19,25 @@ func checkFileExists(p string) error {
 		return err
 	} else {
 		if fileInfo.IsDir() {
-			return fmt.Errorf("Path %s must be a file nod directory!", pth)
+			return fmt.Errorf("Path %s must be a file not directory!", pth)
 		}
 	}
 	return nil
 }
 
-func chunkReadFileToSHA256(f *os.File) ([32]byte, error){
+func chunkReadFileToSHA256(f *os.File) ([32]byte, error) {
 	shaHandler := sha256.New() // Initiate a checksum handler
 	r := bufio.NewReader(f)
 	for {
 		buf := make([]byte, 48*1024) // Read chunk size
-		n, err := r.Read(buf) // Read chunk
-		buf = buf[:n] // ensure that trailing reads are all that's in the buffer
+		n, err := r.Read(buf)        // Read chunk
+		buf = buf[:n]                // ensure that trailing reads are all that's in the buffer
 		if n == 0 {
-			if err == io.EOF{
+			if err == io.EOF {
 				// Just end of file! no error
 				break
 			}
-			if err != nil{
+			if err != nil {
 				return [32]byte{}, err
 			}
 		}
@@ -46,7 +46,7 @@ func chunkReadFileToSHA256(f *os.File) ([32]byte, error){
 	return [32]byte(shaHandler.Sum(nil)), nil
 }
 
-func FileToSHA256(p string) ([32]byte, error){
+func FileToSHA256(p string) ([32]byte, error) {
 	var err error
 	if err := checkFileExists(p); err != nil {
 		// Path is not good
